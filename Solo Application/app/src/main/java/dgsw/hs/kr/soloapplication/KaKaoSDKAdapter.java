@@ -5,7 +5,6 @@ import android.content.Context;
 import com.kakao.auth.ApprovalType;
 import com.kakao.auth.AuthType;
 import com.kakao.auth.IApplicationConfig;
-import com.kakao.auth.IPushConfig;
 import com.kakao.auth.ISessionConfig;
 import com.kakao.auth.KakaoAdapter;
 
@@ -41,6 +40,7 @@ public class KaKaoSDKAdapter extends KakaoAdapter{
             }
         };
     }
+
 
     @Override
     public IApplicationConfig getApplicationConfig() {

@@ -1,10 +1,13 @@
 package dgsw.hs.kr.soloapplication;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.kakao.auth.ISessionCallback;
+import com.kakao.auth.Session;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.MeResponseCallback;
@@ -18,70 +21,47 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        sessionCallback = new SessionCallback();
+        Session.getCurrentSession().addCallback(sessionCallback);
+        Session.getCurrentSession().checkAndImplicitOpen();
     }
 
-    private class SessionCallback implements ISessionCallback{
-        @Override
-        public void onSessionOpened() {
-            UserManagement.requestMe(new MeResponseCallback() {
-                @Override
-                public void onSuccess(UserProfile result) {
-
-                }
-
-                @Override
-                public void onFailure(ErrorResult errorResult) {
-                    super.onFailure(errorResult);
-                }
-
-                @Override
-                public void onNotSignedUp() {
-
-                }
-
-                @Override
-                public void onSessionClosed(ErrorResult errorResult) {
-
-                }
-            };
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)){
+            return ;
         }
-
-        @Override
-        public void onSessionOpenFailed(KakaoException exception) {
-            Log.d("error", "Session Fail Error is " + exception.getMessage().toString());
-        }
-
-
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void requestMe() {
-        //유저의 정보를 받아오는 함수
-
+    public void request(){
         UserManagement.requestMe(new MeResponseCallback() {
             @Override
-            public void onFailure(ErrorResult errorResult) {
-                Log.e("Log:", "error message=" + errorResult);
-//                super.onFailure(errorResult);
-            }
-
-            @Override
             public void onSessionClosed(ErrorResult errorResult) {
-
-                Log.d("Log:", "onSessionClosed1 =" + errorResult);
+                Log.d("error", "Session Closed Error is " + errorResult.toString());
             }
 
             @Override
             public void onNotSignedUp() {
-                //카카오톡 회원이 아닐시
-                Log.d("Log:", "onNotSignedUp ");
 
             }
 
             @Override
             public void onSuccess(UserProfile result) {
-                Log.e("UserProfile", result.toString());
-                Log.e("UserProfile", result.getId() + "");
+                Toast.makeText(getApplicationContext(), "사용자 이름은 " + result.getNickname(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private class SessionCallback implements ISessionCallback{
+        @Override
+        public void onSessionOpened() {
+            request();
+        }
+        @Override
+        public void onSessionOpenFailed(KakaoException exception) {
+            Log.d("error", "Session Fail Error is " + exception.getMessage().toString());
+        }
     }
 }
