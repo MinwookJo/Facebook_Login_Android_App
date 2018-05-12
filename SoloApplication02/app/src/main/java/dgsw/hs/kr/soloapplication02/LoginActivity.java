@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
                         ProfileTracker profileTracker = new ProfileTracker() {
                             @Override
                             protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-                                if(object!=null) {
+                                if(currentProfile!=null) {
                                     Uri imageUri = currentProfile.getProfilePictureUri(400, 400);
                                     profilePicUrl = imageUri.toString();
                                     Log.d("token:", currentProfile + "AND" + imageUri);
