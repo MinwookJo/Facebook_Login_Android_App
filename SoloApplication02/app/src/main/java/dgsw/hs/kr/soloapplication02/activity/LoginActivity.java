@@ -1,4 +1,4 @@
-package dgsw.hs.kr.soloapplication02;
+package dgsw.hs.kr.soloapplication02.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -36,6 +36,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
 
+import dgsw.hs.kr.soloapplication02.R;
+
 public class LoginActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
     String profilePicUrl="Nope";
@@ -71,8 +73,12 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                             }
                         };
+                        Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+                        startActivity(intent);
+                        finish();
                     }
                 });
+
                 Bundle parameters = new Bundle();
                 parameters.putString("fields", "id,name,email,gender,birthday");
                 graphRequest.setParameters(parameters);
